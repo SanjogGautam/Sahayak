@@ -6,12 +6,15 @@ load_dotenv()
 client=genai.Client(
     api_key=os.getenv("GEMINI_API_KEY"),
 )
-interaction= client.interactions.create(
+stream= client.interactions.create(
     model= "gemini-3.8-flash",
     input="what is andromeda galaxy? ",
     generation_config={
         "thinking_level":"low"
-    }
-
+    },
+    stream=True,
 )
-print(interaction.output_text)
+for event in stream:
+    if event.event_type == "step.delta":
+        if event.delta.type=="text":
+            print(event.delta.text,end="",flush=True)
