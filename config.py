@@ -13,6 +13,8 @@ def ask(question: str, system = None,schema=None) -> str:
             "schema": schema.model_json_schema()
 
         }
+    if not question or not question.strip():
+        raise Exception("ask() can't be empty")
     client = genai.Client(
         api_key=os.getenv("GEMINI_API_KEY"),
     )
